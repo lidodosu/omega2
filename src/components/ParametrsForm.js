@@ -4,6 +4,7 @@ import CheckboxField from "./CheckboxField"
 
 
 class ParametrsForm extends React.Component {
+    // state=this.props;
   state = {
     amountPoint: 50,
     valMinX: 0,
