@@ -1,58 +1,60 @@
 import React from "react";
 import * as d3 from "d3";
 
-// ({amountPoint, valMinX, valMaxX, valMinY, valMaxY, checkedGrid, checkedLabelAxis}) {
-  class Chart extends React.Component {
+class Chart extends React.Component {
 
     componentDidMount() {
       this.drawChart();
-   };
+    };
 
-    componentWillUnmount() {
-      alert("Компонент удалится!");
-    };   
+    componentDidUpdate() {
+      if (this.props.reDraw) {
+        this.drawChart();
+      } 
+
+      if (this.props.checkedGrid) {
+        d3.selectAll(".grid .tick line").attr("display", "block");
+      } else {
+        d3.selectAll(".grid .tick line").attr("display", "none");
+      }
+      if (this.props.checkedLabelAxis) {
+        d3.selectAll(".axis text").attr("display", "block");
+      } else {
+        d3.selectAll(".axis text").attr("display", "none");
+      }
+    };
     
     render() {
+      console.log("render()", this.props.reDraw, this.props.checkedGrid, this.props.checkedLabelAxis);
       return (
               <svg className="svg" 
                   id="svg" 
-                  style={{border: "1px solid black"}}
+                  // style={{border: "1px solid black"}}
               >
               </svg>
       );
     }
 
-    drawChart(){   
 
-      const { amountPoint, valMinX, valMaxX, valMinY, valMaxY, checkedGrid, checkedLabelAxis } = this.props;
+    drawChart(){   
+      const { amountPoint, minX, maxX, minY, maxY, checkedGrid, checkedLabelAxis } = this.props;
 
       d3.selectAll("svg > *").remove();
 
       function getRandomArbitrary(min, max) {
-          return parseInt(Math.random() * (max - min) + min);
+        return parseInt(Math.random() * (max - min) + min);
       }
-      // var randX = getRandomArbitrary(0, 100);
-      // console.log(randX);
   
       var x = []
-      var y = []
-  
-      // var countPoints = document.getElementById("countPoints").value;
-      // var minX = document.getElementById("minX").value;
-      // var maxX = document.getElementById("maxX").value;
-      // var minY = document.getElementById("minY").value;
-      // var maxY = document.getElementById("maxY").value;
-      
+      var y = []  
   
       for(var i=0; i<amountPoint; i++){
-          x.push(getRandomArbitrary(valMinX,valMaxX))
-          y.push(getRandomArbitrary(valMinY,valMaxY))
+          x.push(getRandomArbitrary(minX,maxX))
+          y.push(getRandomArbitrary(minY,maxY))
       }
   
       x.sort((a,b)=>{return a-b});
-  
-      // console.log(x);
-  
+    
       var data = [ { label: "График", 
                   x: x,
                   y: y
@@ -83,17 +85,17 @@ import * as d3 from "d3";
                   
                   var x_scale = d3.scale.linear()
                       .range([0, innerwidth])
-                      .domain([ d3.min(datasets, function(d) { return valMinX; }), 
+                      .domain([ d3.min(datasets, function(d) { return minX; }), 
                       // .domain([ d3.min(datasets, function(d) { return d3.min(d.x); }), 
-                      d3.max(datasets, function(d) { return valMaxX; }) ]) ;
+                      d3.max(datasets, function(d) { return maxX; }) ]) ;
                               // d3.max(datasets, function(d) { return d3.max(d.x); }) ]) ;
                   
                   var y_scale = d3.scale.linear()
                       .range([innerheight, 0])
                       // .domain([ d3.min(datasets, function(d) { return d3.min(d.y); }),
                       //         d3.max(datasets, function(d) { return d3.max(d.y); }) ]) ;
-                      .domain([ d3.min(datasets, function(d) { return valMinY; }),
-                              d3.max(datasets, function(d) { return valMaxY; }) ]) ;
+                      .domain([ d3.min(datasets, function(d) { return minY; }),
+                              d3.max(datasets, function(d) { return maxY; }) ]) ;
   
                   var color_scale = d3.scale.category10()
                       .domain(d3.range(datasets.length)) ;
@@ -131,7 +133,6 @@ import * as d3 from "d3";
                       .attr("transform", "translate(" + margin.left + "," + margin.top + ")") ;
                   
                   // Сетка и метки
-                  if (checkedGrid) {
                     svg.append("g")
                         .attr("class", "x grid")
                         .attr("transform", "translate(0," + innerheight + ")")
@@ -140,9 +141,7 @@ import * as d3 from "d3";
                     svg.append("g")
                         .attr("class", "y grid")
                         .call(y_grid) ;
-                  }
-  
-                  if (checkedLabelAxis) {
+
                     svg.append("g")
                         .attr("class", "x axis")
                         .attr("transform", "translate(0," + innerheight + ")") 
@@ -162,7 +161,6 @@ import * as d3 from "d3";
                         .attr("dy", "0.71em")
                         .style("text-anchor", "end")
                         .text(ylabel) ;
-                    }
   
                   var data_lines = svg.selectAll(".d3_xy_chart_line")
                       .data(datasets.map(function(d) {return d3.zip(d.x, d.y);}))
@@ -212,7 +210,7 @@ import * as d3 from "d3";
           } ;
   
           return chart;
-      }    
+      }         
     }
   }
 

@@ -1,19 +1,20 @@
 import React from "react";
+import * as d3 from "d3";
 import InputParamField from "./InputParamField"
 import CheckboxField from "./CheckboxField"
 
 
 class ParametrsForm extends React.Component {
-    // state=this.props;
-  state = {
-    amountPoint: 50,
-    valMinX: 0,
-    valMaxX: 100,
-    valMinY: 0,
-    valMaxY: 100,
-    checkedGrid: true,
-    checkedLabelAxis: true
-  };
+    state=this.props;
+
+    // constructor(props) {
+    //   super(props);
+    //   this.handleFilterTextChange = this.handleFilterTextChange.bind(this);
+    // }
+
+    // handleFilterTextChange(e) {
+    //   this.props.onAAmountPointChange(e.target.value);
+    // }
 
   onAmountPointChange = event => {
     this.setState({
@@ -23,34 +24,35 @@ class ParametrsForm extends React.Component {
 
   onMinXChange = event => {
     this.setState({
-      valMinX: event.target.value
+      minX: event.target.value
     })
   };
 
   onMaxXChange = event => {
     this.setState({
-      valMaxX: event.target.value
+      maxX: event.target.value
     })
   };
 
   onMinYChange = event => {
     this.setState({
-      valMinY: event.target.value
+      minY: event.target.value
     })
   };
 
   onMaxYChange = event => {
     this.setState({
-      valMaxY: event.target.value
+      maxY: event.target.value
     })
   };
 
-  // читтерство
+  // читтерство ?
   onGridChange = event => {
     this.props.updateGridAndLabel(!this.state.checkedGrid,this.state.checkedLabelAxis);
     this.setState({
       checkedGrid: !this.state.checkedGrid
     });
+    // console.log(event.target.checked);
   }
 
   onLabelChange = event => {
@@ -61,41 +63,41 @@ class ParametrsForm extends React.Component {
   }
 
   render() {
-    const { amountPoint, valMinX, valMaxX, valMinY, valMaxY, checkedGrid, checkedLabelAxis } = this.state;
+    const { amountPoint, minX, maxX, minY, maxY, checkedGrid, checkedLabelAxis } = this.state;
 
     return (
       <div id="controlPanel">
         <InputParamField label="Количество точек "
                           id="countPoints"
                           value={amountPoint}
-                          onChange={this.onAmountPointChange} />
+                          // onChange={this.handleFilterTextChange}
+                          onChange={this.onAmountPointChange} 
+        />
         <p>
           <InputParamField label="Диапазон начений по оси X: от "
                           id="minX"
-                          value={valMinX}
+                          value={minX}
                           onChange={this.onMinXChange} />
           <InputParamField label=" до "
                           id="maxX"
-                          value={valMaxX}
+                          value={maxX}
                           onChange={this.onMaxXChange} />
         </p>
         <p>
           <InputParamField label="Диапазон начений по оси Y: от "
                           id="minY"
-                          value={valMinY}
+                          value={minY}
                           onChange={this.onMinYChange} />
           <InputParamField label=" до "
                           id="maxY"
-                          value={valMaxY}
+                          value={maxY}
                           onChange={this.onMaxYChange} />
         </p>
 
 
-
-
         {/* <p>Количество точек:<input type="text" id="countPoints" value="50" /></p> */}
-        {/* <RangeValueAxisField nameAxis="X" valMin={valMinX} valMax={valMaxX} idMin="minX" idMax="maxX"  />
-        <RangeValueAxisField nameAxis="Y" valMin={valMinY} valMax={valMaxY} idMin="minY" idMax="maxY"  /> */}
+        {/* <RangeValueAxisField nameAxis="X" valMin={minX} valMax={maxX} idMin="minX" idMax="maxX"  />
+        <RangeValueAxisField nameAxis="Y" valMin={minY} valMax={maxY} idMin="minY" idMax="maxY"  /> */}
         {/* <p>Диапазон значений по оси X: от <input type="text" id="minX" value="0" /> до <input type="text" id="maxX" value="100" /> </p> */}
         {/* <p>Диапазон значений по оси Y: от <input type="text" id="minY" value="0" /> до <input type="text" id="maxY" value="100" /> </p> */}
         <p>
@@ -116,13 +118,13 @@ class ParametrsForm extends React.Component {
         {/* <p><input type="button" value="Построить график" onClick="updateChart()" /></p> */}
         {/* <p><input type="button" value="Построить график" onClick="drawChart()" /></p> */}
         <p><input type="button" value="Перестроить график" onClick={() => { 
-          this.props.updateData(this.state.amountPoint, 
-                                this.state.valMinX, 
-                                this.state.valMaxX, 
-                                this.state.valMinY, 
-                                this.state.valMaxY, 
-                                this.state.checkedGrid,
-                                this.state.checkedLabelAxis)}} />
+          this.props.updateData(amountPoint, 
+                                minX, 
+                                maxX, 
+                                minY, 
+                                maxY, 
+                                checkedGrid,
+                                checkedLabelAxis)}} />
         </p>
 
         {/* <p><input type="button" value="Убрать сетку" onClick="delGrid()" />        <input type="button" value="Убрать метки" onclick="delLabel()" /></p>
